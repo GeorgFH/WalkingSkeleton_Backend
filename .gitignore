@@ -1,0 +1,21 @@
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Maven
+target/
+
+# Gradle
+build/
+.gradle/
+
+# Logs
+*.log
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# Spring Boot
+bin/
+out/
