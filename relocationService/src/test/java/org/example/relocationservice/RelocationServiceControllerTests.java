@@ -35,9 +35,15 @@ public class RelocationServiceControllerTests {
     void testSubmitFormData() {
         String requestBody = """
             {
+                "moveDate": "2025-03-21",
                 "name": "Max Mustermann",
-                "address": "Musterstraße 1, 12345 Musterstadt",
-                "email": "max.mustermann@email.com",
+                "from": "Musterstraße 1",
+                "to": "Hauptstraße 2",
+                "amount": 10,
+                "fromFloor": 3,
+                "fromElevatorAvailable": true,
+                "toFloor": 2,
+                "toElevatorAvailable": false,
                 "phoneNumber": "+491234567890"
             }
         """;
@@ -49,7 +55,42 @@ public class RelocationServiceControllerTests {
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.OK)
                 .expectBody(String.class)
-                .isEqualTo("Formular erfolgreich empfangen");  // Erwartete Antwort
+                .isEqualTo("Formular erfolgreich empfangen");
     }
 
+
+    @Test
+    void testFormDataSavedToDatabase() {
+        String requestBody = """
+            {
+                "moveDate": "2025-03-21",
+                "name": "Max Mustermann",
+                "from": "Musterstraße 1",
+                "to": "Hauptstraße 2",
+                "amount": 10,
+                "fromFloor": 3,
+                "fromElevatorAvailable": true,
+                "toFloor": 2,
+                "toElevatorAvailable": false
+            }
+        """;
+
+        webTestClient.post()
+                .uri("/submit")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(requestBody)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.OK);
+
+        webTestClient.get()
+                .uri("/requests")
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.OK)
+                .expectBody(String.class)
+                .value(response -> {
+                    if (!response.contains("Max Mustermann")) {
+                        throw new AssertionError("Daten wurden nicht in der Datenbank gespeichert.");
+                    }
+                });
+    }
 }
