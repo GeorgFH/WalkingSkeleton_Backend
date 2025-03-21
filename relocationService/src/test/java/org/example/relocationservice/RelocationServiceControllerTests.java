@@ -5,9 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class RelocationServiceControllerTests {
 
     private WebTestClient webTestClient;
@@ -28,6 +29,27 @@ public class RelocationServiceControllerTests {
                 .expectStatus().isEqualTo(HttpStatus.OK)
                 .expectBody(String.class)
                 .isEqualTo("Service is healthy");
+    }
+
+    @Test
+    void testSubmitFormData() {
+        String requestBody = """
+            {
+                "name": "Max Mustermann",
+                "address": "Musterstraße 1, 12345 Musterstadt",
+                "email": "max.mustermann@email.com",
+                "phoneNumber": "+491234567890"
+            }
+        """;
+
+        webTestClient.post()
+                .uri("/submit")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(requestBody)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.OK)
+                .expectBody(String.class)
+                .isEqualTo("Formular erfolgreich empfangen");  // Erwartete Antwort
     }
 
 }
