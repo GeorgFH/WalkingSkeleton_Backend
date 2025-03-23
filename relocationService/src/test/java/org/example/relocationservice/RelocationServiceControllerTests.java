@@ -68,7 +68,7 @@ public class RelocationServiceControllerTests {
 
     @Test
     void testGetAllRequests() {
-        // Add a test request to ensure data exists
+
         String requestBody = """
             {
                 "moveDate": "2025-03-24",

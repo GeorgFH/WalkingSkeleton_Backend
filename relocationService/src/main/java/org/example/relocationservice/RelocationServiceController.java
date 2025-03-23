@@ -37,6 +37,13 @@ public class RelocationServiceController {
 
         return "Formular erfolgreich empfangen";
     }
-
+    /**
+     * Get endpoint that returns all data
+     * @return all received data
+     */
+    @GetMapping("/requests")
+    public List<RelocationRequest> getAllRequests() {
+        return repository.findAll();
+    }
 
 }
