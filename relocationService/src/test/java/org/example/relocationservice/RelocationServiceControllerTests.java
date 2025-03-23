@@ -2,6 +2,7 @@ package org.example.relocationservice;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -11,6 +12,9 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 public class RelocationServiceControllerTests {
 
 
+    @Autowired
+    private RelocationRequestRepository repository;
+
     private WebTestClient webTestClient;
 
 
@@ -19,6 +23,7 @@ public class RelocationServiceControllerTests {
         this.webTestClient = WebTestClient.bindToServer()
                 .baseUrl("http://localhost:8080")
                 .build();
+        repository.deleteAll();
     }
 
     @Test
@@ -35,10 +40,15 @@ public class RelocationServiceControllerTests {
     void testSubmitFormData() {
         String requestBody = """
             {
+                "moveDate": "2025-03-22",
                 "name": "Max Mustermann",
-                "address": "Musterstraße 1, 12345 Musterstadt",
-                "email": "max.mustermann@email.com",
-                "phoneNumber": "+491234567890"
+                "from": "Musterstraße 1, 12345 Musterstadt",
+                "to": "Beispielstraße 2, 98765 Beispielstadt",
+                "amount": 5,
+                "fromFloor": 3,
+                "fromElevatorAvailable": true,
+                "toFloor": 2,
+                "toElevatorAvailable": false
             }
         """;
 
@@ -50,6 +60,8 @@ public class RelocationServiceControllerTests {
                 .expectStatus().isEqualTo(HttpStatus.OK)
                 .expectBody(String.class)
                 .isEqualTo("Formular erfolgreich empfangen");  // Erwartete Antwort
+
+        assert repository.count() > 0;
     }
 
 }

@@ -1,18 +1,30 @@
 package org.example.relocationservice;
 
+import jakarta.persistence.*;
+
+@Entity
 public class RelocationRequest {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String moveDate;
     private String name;
+
+    @Column(name = "from_location")
     private String from;
+
+    @Column(name = "to_location")
     private String to;
+
     private int amount;
     private int fromFloor;
     private boolean fromElevatorAvailable;
     private int toFloor;
     private boolean toElevatorAvailable;
 
-    // Standard-Konstruktor
+
     public RelocationRequest() {}
 
     // Getter und Setter
