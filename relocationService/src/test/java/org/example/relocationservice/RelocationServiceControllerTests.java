@@ -59,8 +59,8 @@ public class RelocationServiceControllerTests {
                 .bodyValue(requestBody)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.OK)
-                .expectBody(String.class)
-                .isEqualTo("Formular erfolgreich empfangen");  // Erwartete Antwort
+                .expectBody()
+                .jsonPath("$.message").isEqualTo("Formular erfolgreich empfangen");
 
         assert repository.count() > 0;
     }
