@@ -1,12 +1,14 @@
 package org.example.relocationservice;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 
 @RestController
 public class RelocationServiceController {
@@ -31,19 +33,23 @@ public class RelocationServiceController {
      * @return confirmation message if the data is successfully received
      */
     @PostMapping("/submit")
-    public String submitFormData(@RequestBody RelocationRequest request) {
+    public ResponseEntity<Map<String, String>> submitFormData(@RequestBody RelocationRequest request) {
         repository.save(request);
         System.out.println("Formulardaten erhalten: " + request.toString());
 
-        return "Formular erfolgreich empfangen";
+        // Rückgabe als JSON-Objekt
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Formular erfolgreich empfangen");
+        return ResponseEntity.ok(response);
     }
     /**
      * Get endpoint that returns all data
      * @return all received data
      */
     @GetMapping("/requests")
-    public List<RelocationRequest> getAllRequests() {
-        return repository.findAll();
+    public ResponseEntity<List<RelocationRequest>> getAllRequests() {
+        List<RelocationRequest> requests = repository.findAll();
+        return ResponseEntity.ok(requests);
     }
 
 }
