@@ -17,13 +17,12 @@ public class RelocationServiceApplication {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**") // Erlaubt CORS für alle Endpunkte
-                        .allowedOrigins("http://localhost:4200", "http://localhost:9877")
+                registry.addMapping("/**")
+                        .allowedOrigins("http://localhost:4200", "http://localhost:9877", "http://localhost:9878")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
             }
         };
     }
-
 }
