@@ -2,6 +2,8 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.4'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'com.github.spotbugs' version '5.0.14'
+    id 'com.diffplug.spotless' version '6.25.0'
 }
 
 group = 'org.example'
@@ -32,5 +34,30 @@ tasks.named('test') {
     testLogging {
         events "PASSED", "SKIPPED", "FAILED"
         exceptionFormat "full"
+    }
+}
+
+spotbugs {
+    toolVersion = '4.8.3'
+    ignoreFailures = false
+    effort = 'max'
+    reportLevel = 'high'
+}
+
+tasks.withType(com.github.spotbugs.snom.SpotBugsTask).configureEach {
+    reports {
+        xml.required = false
+        html.required = true
+    }
+}
+
+spotless {
+    java {
+        target 'src/**/*.java'
+        googleJavaFormat('1.17.0') // oder eine andere Formatierung wie eclipse(), prettier(), etc.
+        // optional:
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
     }
 }
